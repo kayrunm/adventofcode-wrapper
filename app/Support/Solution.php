@@ -8,6 +8,11 @@ abstract class Solution
 {
     protected mixed $input;
 
+    protected array $answers = [
+        'partOne' => null,
+        'partTwo' => null,
+    ];
+
     /**
      * @throws AdventOfCodeException
      */
@@ -28,7 +33,11 @@ abstract class Solution
 
             $executionTime = \microtime(true) - $start;
 
-            $results[] = new Result($result, $executionTime);
+            $results[] = new Result(
+                $result,
+                $executionTime * 1000000,
+                $this->answers[$part]
+            );
         }
 
         return $results;

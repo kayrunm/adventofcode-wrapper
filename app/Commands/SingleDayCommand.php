@@ -13,7 +13,7 @@ class SingleDayCommand extends Command
     private const LOWEST_YEAR = 2021;
     private const CURRENT_YEAR = 2021;
 
-    protected $signature = 'day {day} {--year=}';
+    protected $signature = 'day {day?} {--year=}';
 
     protected $description = 'Run the Advent of Code solutions for the given day.';
 
@@ -23,14 +23,14 @@ class SingleDayCommand extends Command
             [$day, $year] = $this->parseInput();
 
             $this->info("Advent of Code ᐧ {$year} ᐧ Day {$day}");
+            $this->newLine();
 
-            $result = $solutionFactory->findSolutionForDay($day, $year)->solve();
+            $results = $solutionFactory->findSolutionForDay($day, $year)->solve();
 
-            for ($i = 0; $i < 2; $i++) {
-                $this->newLine();
-                $this->line('Part ' . ($i + 1));
-                $this->line("  Result: {$result[$i]->result}");
-                $this->line("  Execution time: {$result[$i]->executionTime}");
+            for ($i = 1; $i <= 2; $i++) {
+                $result = $results[$i - 1];
+
+                $this->line("Part {$i}: {$result->formattedAnswer()}, {$result->formattedTime()}");
             }
 
             return self::SUCCESS;
@@ -46,7 +46,7 @@ class SingleDayCommand extends Command
      */
     private function parseInput(): array
     {
-        $day = (int) $this->argument('day');
+        $day = (int) ($this->argument('day') ?? date('j'));
         $year = (int) ($this->option('year') ?? self::CURRENT_YEAR);
 
         if ($day < 1 || $day > self::DAYS) {
