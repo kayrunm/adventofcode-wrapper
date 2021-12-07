@@ -8,7 +8,7 @@ use App\Support\SolutionFactory;
 use LaravelZero\Framework\Commands\Command;
 use OutOfRangeException;
 
-class YearCommand extends Command
+class SolveYearCommand extends Command
 {
     protected $signature = 'year {year?}';
 

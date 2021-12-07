@@ -7,7 +7,7 @@ use App\Solutions\AdventOfCode;
 use App\Support\SolutionFactory;
 use LaravelZero\Framework\Commands\Command;
 
-class SingleDayCommand extends Command
+class SolveDayCommand extends Command
 {
     protected $signature = 'day {day?} {--year=}';
 
