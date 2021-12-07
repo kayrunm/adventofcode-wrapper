@@ -3,33 +3,36 @@
 namespace App\Commands;
 
 use App\Exceptions\AdventOfCodeException;
-use App\Exceptions\SolutionNotFound;
-use App\Solutions\AdventOfCode;
+use App\Support\Api;
 use App\Support\ParsesDayAndYear;
 use App\Support\SolutionFactory;
-use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use LaravelZero\Framework\Commands\Command;
 
 class MakeSolutionCommand extends Command
 {
     use ParsesDayAndYear;
 
-    protected $signature = 'make {day?} {--year=}';
+    protected $signature = 'make {day?} {--year=} {--force}';
 
     protected $description = 'Create a new solution for the given day.';
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function handle(SolutionFactory $solutionFactory): int
     {
         try {
             [$day, $year] = $this->parseDayAndYear();
 
-            if ($solutionFactory->hasSolutionForDay($day, $year)) {
+            if (! $this->option('force') && $solutionFactory->hasSolutionForDay($day, $year)) {
                 throw new AdventOfCodeException("Solution for Day {$day}, {$year} already exists.");
             }
 
             $this->generateFile($day, $year);
-
-            $this->info("Solution for Day {$day}, {$year} created successfully.");
+            $this->downloadInput($day, $year);
 
             return self::SUCCESS;
         } catch (AdventOfCodeException $e) {
@@ -39,18 +42,36 @@ class MakeSolutionCommand extends Command
         }
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     private function generateFile(int $day, int $year): void
     {
-        $stub = file_get_contents(base_path('stubs/Solution.stub'));
-        $stub = str_replace('{#YEAR#}', $year, $stub);
-        $stub = str_replace('{#DAY#}', $day, $stub);
+        $path = "Year{$year}/Day{$day}.php";
 
-        if (! is_dir($dir = app_path("Solutions/Year{$year}"))) {
-            mkdir($dir, 0777, true);
-        }
+        $this->line('Creating solution file...');
 
-        $file = fopen(app_path("Solutions/Year{$year}/Day{$day}.php"), 'w');
-        fwrite($file, $stub);
-        fclose($file);
+        $stub = Storage::disk('stubs')->get('Solution.stub');
+
+        $stub = (string) Str::of($stub)
+            ->replace('{#YEAR#}', $year)
+            ->replace('{#DAY#}', $day);
+
+        Storage::disk('solutions')->put($path, $stub);
+
+        $this->info("Solution for Day {$day}, {$year} successfully created.");
+    }
+
+    private function downloadInput(int $day, int $year): void
+    {
+        $path = "{$year}/{$day}.txt";
+
+        $this->line('Downloading input data...');
+
+        $data = app(Api::class)->getInputForDay($day, $year);
+
+        Storage::disk('input')->put($path, $data);
+
+        $this->info("Input data for Day {$day}, {$year} successfully downloaded.");
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Support;
 
 use App\Exceptions\AdventOfCodeException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 class InputResolver
 {
@@ -11,10 +13,10 @@ class InputResolver
      */
     public function resolve(int $day, int $year): string
     {
-        if (! file_exists($path = base_path("input/{$year}/{$day}.txt"))) {
+        try {
+            return Storage::disk('input')->get("{$year}/{$day}.txt");
+        } catch (FileNotFoundException) {
             throw new AdventOfCodeException("Input for Year {$year}, Day {$day} not found.");
         }
-
-        return file_get_contents($path, FILE_IGNORE_NEW_LINES);
     }
 }
