@@ -4,11 +4,14 @@ namespace App\Commands;
 
 use App\Exceptions\AdventOfCodeException;
 use App\Solutions\AdventOfCode;
+use App\Support\ParsesDayAndYear;
 use App\Support\SolutionFactory;
 use LaravelZero\Framework\Commands\Command;
 
 class SolveDayCommand extends Command
 {
+    use ParsesDayAndYear;
+
     protected $signature = 'day {day?} {--year=}';
 
     protected $description = 'Run the Advent of Code solutions for the given day.';
@@ -16,7 +19,7 @@ class SolveDayCommand extends Command
     public function handle(SolutionFactory $solutionFactory): int
     {
         try {
-            [$day, $year] = $this->parseInput();
+            [$day, $year] = $this->parseDayAndYear();
 
             $this->info("Advent of Code ᐧ {$year} ᐧ Day {$day}");
             $this->newLine();
@@ -35,24 +38,5 @@ class SolveDayCommand extends Command
 
             return self::INVALID;
         }
-    }
-
-    /**
-     * @throws AdventOfCodeException
-     */
-    private function parseInput(): array
-    {
-        $day = (int) ($this->argument('day') ?? date('j'));
-        $year = (int) ($this->option('year') ?? AdventOfCode::CURRENT_YEAR);
-
-        if ($day < 1 || $day > AdventOfCode::DAYS) {
-            throw new AdventOfCodeException('Invalid day provided.');
-        }
-
-        if ($year < AdventOfCode::LOWEST_YEAR || $year > AdventOfCode::CURRENT_YEAR) {
-            throw new AdventOfCodeException('Invalid year provided.');
-        }
-
-        return [$day, $year];
     }
 }

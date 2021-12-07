@@ -16,11 +16,21 @@ class SolutionFactory
         $this->inputResolver = $inputResolver;
     }
 
+    public function hasSolutionForDay(int $day, int $year): bool
+    {
+        return class_exists($this->getClassNameForDay($day, $year));
+    }
+
+    /**
+     * @throws SolutionNotFound
+     */
     public function findSolutionForDay(int $day, int $year): Solution
     {
-        if (! class_exists($class = "App\\Solutions\\Year{$year}\\Day{$day}")) {
+        if (! $this->hasSolutionForDay($day, $year)) {
             throw SolutionNotFound::forDay($day, $year);
         }
+
+        $class = $this->getClassNameForDay($day, $year);
 
         return new $class($this->inputResolver);
     }
@@ -41,5 +51,10 @@ class SolutionFactory
         }
 
         return $solutions;
+    }
+
+    public function getClassNameForDay(int $day, $year): string
+    {
+        return "App\\Solutions\\Year{$year}\\Day{$day}";
     }
 }

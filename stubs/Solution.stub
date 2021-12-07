@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Solutions\Year{#YEAR#};
+
+use App\Support\Solution;
+
+class Day{#DAY#} extends Solution
+{
+    protected array $answers = [
+        'partOne' => null,
+        'partTwo' => null,
+    ];
+
+    public function partOne(): mixed
+    {
+        // ...
+    }
+
+    public function partTwo(): mixed
+    {
+        // ...
+    }
+}
