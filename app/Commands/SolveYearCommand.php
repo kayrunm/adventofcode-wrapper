@@ -48,9 +48,9 @@ class SolveYearCommand extends Command
      */
     private function parseInput(): int
     {
-        $year = (int) ($this->argument('year') ?? AdventOfCode::CURRENT_YEAR);
+        $year = (int) ($this->argument('year') ?? config('advent-of-code.years.current'));
 
-        if ($year < AdventOfCode::LOWEST_YEAR || $year > AdventOfCode::CURRENT_YEAR) {
+        if ($year < config('advent-of-code.years.lowest') || $year > config('advent-of-code.years.current')) {
             throw new AdventOfCodeException('Invalid year provided.');
         }
 

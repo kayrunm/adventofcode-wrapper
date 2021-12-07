@@ -15,4 +15,20 @@ return [
 
     'session' => env('AOC_SESSION'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Years
+    |--------------------------------------------------------------------------
+    |
+    | In here you can specify which years challenges should be available.
+    |
+    */
+
+    'years' => [
+
+        'lowest' => env('LOWEST_YEAR'),
+
+        'current' => env('CURRENT_YEAR'),
+
+    ],
 ];

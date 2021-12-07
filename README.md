@@ -1,36 +1,66 @@
-<p align="center">
-    <img title="Laravel Zero" height="100" src="https://raw.githubusercontent.com/laravel-zero/docs/master/images/logo/laravel-zero-readme.png" />
-</p>
+# Advent of Code wrapper
 
-<p align="center">
-  <a href="https://github.com/laravel-zero/framework/actions"><img src="https://img.shields.io/github/workflow/status/laravel-zero/framework/Tests.svg" alt="Build Status"></img></a>
-  <a href="https://packagist.org/packages/laravel-zero/framework"><img src="https://img.shields.io/packagist/dt/laravel-zero/framework.svg" alt="Total Downloads"></a>
-  <a href="https://packagist.org/packages/laravel-zero/framework"><img src="https://img.shields.io/packagist/v/laravel-zero/framework.svg?label=stable" alt="Latest Stable Version"></a>
-  <a href="https://packagist.org/packages/laravel-zero/framework"><img src="https://img.shields.io/packagist/l/laravel-zero/framework.svg" alt="License"></a>
-</p>
+This is an Advent of Code solution wrapper built on Laravel Zero.
 
-<h4> <center>This is a <bold>community project</bold> and not an official Laravel one </center></h4>
+## Getting Started
 
-Laravel Zero was created by, and is maintained by [Nuno Maduro](https://github.com/nunomaduro), and is a micro-framework that provides an elegant starting point for your console application. It is an **unofficial** and customized version of Laravel optimized for building command-line applications.
+### Valid years
+You can change which years are valid challenge years by changing the `LOWEST_YEAR` and
+`CURRENT_YEAR` environment variables. The `CURRENT_YEAR` is used as a fallback for any commands
+that are run without a given year.
 
-- Built on top of the [Laravel](https://laravel.com) components.
-- Optional installation of Laravel [Eloquent](https://laravel-zero.com/docs/database/), Laravel [Logging](https://laravel-zero.com/docs/logging/) and many others.
-- Supports interactive [menus](https://laravel-zero.com/docs/build-interactive-menus/) and [desktop notifications](https://laravel-zero.com/docs/send-desktop-notifications/) on Linux, Windows & MacOS.
-- Ships with a [Scheduler](https://laravel-zero.com/docs/task-scheduling/) and  a [Standalone Compiler](https://laravel-zero.com/docs/build-a-standalone-application/).
-- Integration with [Collision](https://github.com/nunomaduro/collision) - Beautiful error reporting
+### API session
+You will need to grab your `session` ID from the Advent of Code website. This
+is used for downloading your unique input for each day's challenge. 
 
-------
+You can do this by logging into the [Advent of Code](https://adventofcode.com) website and then
+copying the string stored in the cookie called `session`. Once you've got that copied, paste it
+in your `.env` file under the `AOC_SESSION` key.
 
-## Documentation
+## Commands
 
-For full documentation, visit [laravel-zero.com](https://laravel-zero.com/).
+### Make Solution
 
-## Support the development
-**Do you like this project? Support it by donating**
+The `adventofcode make {day}` command creates a solution file and downloads your unique input for the
+specified day's challenge. By default, it will retrieve challenges from the year you specified
+in your `CURRENT_YEAR` environment variable. This can be set at runtime with the `--year` option.
 
-- PayPal: [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L)
-- Patreon: [Donate](https://www.patreon.com/nunomaduro)
+For example, the following will create a solution for the 7th day in 2021:
 
-## License
+```bash
+$ php adventofcode make 7 --year=2021 
+```
 
-Laravel Zero is an open-source software licensed under the MIT license.
+### Solutions
+
+You can run the solutions for a given day or year with the `day` or `year` commands.
+
+For example, the following will run the solution for the 7th day in 2021:
+
+```bash
+$ php adventofcode day 7 --year=2021
+```
+
+And the following will run all the available solutions for 2021.
+
+```base
+$ php adventofcode year 2021
+```
+
+## Refactoring
+
+To aid with refactoring, you can set the answers for any solution by setting the `$answers`
+property on any of your Solution classes.
+
+Let's say the answers for part A and part B of a solution are `383` and `493`, you can set them
+with the following code:
+
+```php
+protected array $answers = [
+    'partOne' => 383,
+    'partTwo' => 493,
+];
+```
+
+By doing this, running any of your solution commands will display whether your solution has
+the correct answer or not.

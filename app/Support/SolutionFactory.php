@@ -40,7 +40,7 @@ class SolutionFactory
     {
         $solutions = [];
 
-        for ($day = 0; $day <= AdventOfCode::DAYS; $day++) {
+        for ($day = 0; $day <= 25; $day++) {
             try {
                 $solution = $this->findSolutionForDay($day, $year);
 

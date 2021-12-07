@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Exceptions\AdventOfCodeException;
-use App\Solutions\AdventOfCode;
 
 trait ParsesDayAndYear
 {
@@ -13,13 +12,13 @@ trait ParsesDayAndYear
     protected function parseDayAndYear(): array
     {
         $day = (int) ($this->argument('day') ?? date('j'));
-        $year = (int) ($this->option('year') ?? AdventOfCode::CURRENT_YEAR);
+        $year = (int) ($this->option('year') ?? config('advent-of-code.years.current'));
 
-        if ($day < 1 || $day > AdventOfCode::DAYS) {
+        if ($day < 1 || $day > 25) {
             throw new AdventOfCodeException('Invalid day provided.');
         }
 
-        if ($year < AdventOfCode::LOWEST_YEAR || $year > AdventOfCode::CURRENT_YEAR) {
+        if ($year < config('advent-of-code.years.lowest') || $year > config('advent-of-code.years.current')) {
             throw new AdventOfCodeException('Invalid year provided.');
         }
 
