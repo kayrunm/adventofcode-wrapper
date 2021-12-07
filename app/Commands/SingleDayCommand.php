@@ -3,16 +3,12 @@
 namespace App\Commands;
 
 use App\Exceptions\AdventOfCodeException;
+use App\Solutions\AdventOfCode;
 use App\Support\SolutionFactory;
 use LaravelZero\Framework\Commands\Command;
-use OutOfRangeException;
 
 class SingleDayCommand extends Command
 {
-    private const DAYS = 25;
-    private const LOWEST_YEAR = 2021;
-    private const CURRENT_YEAR = 2021;
-
     protected $signature = 'day {day?} {--year=}';
 
     protected $description = 'Run the Advent of Code solutions for the given day.';
@@ -47,13 +43,13 @@ class SingleDayCommand extends Command
     private function parseInput(): array
     {
         $day = (int) ($this->argument('day') ?? date('j'));
-        $year = (int) ($this->option('year') ?? self::CURRENT_YEAR);
+        $year = (int) ($this->option('year') ?? AdventOfCode::CURRENT_YEAR);
 
-        if ($day < 1 || $day > self::DAYS) {
+        if ($day < 1 || $day > AdventOfCode::DAYS) {
             throw new AdventOfCodeException('Invalid day provided.');
         }
 
-        if ($year < self::LOWEST_YEAR || $year > self::CURRENT_YEAR) {
+        if ($year < AdventOfCode::LOWEST_YEAR || $year > AdventOfCode::CURRENT_YEAR) {
             throw new AdventOfCodeException('Invalid year provided.');
         }
 
